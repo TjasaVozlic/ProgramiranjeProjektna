@@ -54,7 +54,6 @@ namespace HanoiTowers
         {
             if (!Enum.IsDefined(typeof(HanoiType), type))
                 throw new NotImplementedException("The search for this type is not implemented yet.");
-            Console.WriteLine("number of discs" + numDiscs);
             // For each disc we have its peg
             stateArray = new byte[numDiscs];
             canMoveArray = new bool[numPegs];
@@ -159,7 +158,6 @@ namespace HanoiTowers
                     switch (type)
                     {
                         case HanoiType.K13_01:
-
                             K13_01MoveStrategy K13_01Move = new K13_01MoveStrategy(this.canMoveArray, this.numDiscs, this.numPegs, this.type, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
                             K13_01Move.MoveDisks(tmpState);
                             break;
@@ -319,10 +317,7 @@ namespace HanoiTowers
 
         public void ResetArray(bool[] array)
         {
-            for(int i = array.Length - 1; i >= 0; i--)
-{
-                array[i] = true;
-            }
+            Array.Fill(array, true);
 
         }
 
