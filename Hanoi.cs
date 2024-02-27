@@ -37,15 +37,15 @@ namespace HanoiTowers
         public readonly short numDiscs;
         public readonly short numPegs;
         public HanoiType type;
-        public Stack<int> setPrev;
-        public Stack<int> setCurrent;
-        public Stack<int> setNew;
+        public HashSet<uint> setPrev;
+        public HashSet<uint> setCurrent;
+        public HashSet<uint> setNew;
         public byte[] stateArray;
         public bool[] canMoveArray;
 
         public byte[] newState;
         public int currentState;
-        public int currentDistance;
+        public uint currentDistance;
         int finalState = 0;
         public IMoveStrategy MoveStrategy { get; set; } // Make sure MoveStrategy is set before calling MakeAMove
 
@@ -73,7 +73,7 @@ namespace HanoiTowers
         }
         public int MakeMoveForSmallDimension(out string path)
         {
-            MoveStrategyBase moveStrategy = new MoveStrategyBase(this.numDiscs, this.numPegs, this.type);
+            MoveStrategyBase moveStrategy = new MoveStrategyBase(this.numDiscs, this.numPegs, this.type, this.MoveStrategy);
             // Uporabite izbrano strategijo
             return moveStrategy.ShortestPathForSmallDimension(out path);
         }
@@ -84,6 +84,7 @@ namespace HanoiTowers
     {
         public K13_01(short numDiscs, short numPegs) : base(numDiscs, numPegs)
         {
+
             type = HanoiType.K13_01;
             MoveStrategy = new K13_01MoveStrategy(this.canMoveArray, this.numDiscs, this.numPegs, this.type,  this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
         }

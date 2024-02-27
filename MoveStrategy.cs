@@ -10,15 +10,15 @@ namespace HanoiTowers
 
     public interface IMoveStrategy
     {
-        public void MoveDisks(byte[] state);
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent);
     }
 
     public class K13_01MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K13_01MoveStrategy(bool[] canMoveArray, short numDiscs, short numPegs, HanoiType hanoi, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K13_01MoveStrategy(bool[] canMoveArray, short numDiscs, short numPegs, HanoiType hanoi, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
         { }
 
-        public void MoveDisks(byte[] state)
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             ResetArray(canMoveArray);
 
@@ -33,7 +33,7 @@ namespace HanoiTowers
                         {
                             if (canMoveArray[j])
                             {
-                                AddNewState(state, i, j);
+                                AddNewState(state, i, j, setPrev, setNew);
                             }
                         }
                     }
@@ -41,10 +41,11 @@ namespace HanoiTowers
                     {
                         if (canMoveArray[0])
                         {
-                            AddNewState(state, i, 0);
+                            AddNewState(state, i, 0, setPrev, setNew);
                         }
                     }
                 }
+
                 canMoveArray[var0] = false;
             }
 
@@ -56,11 +57,11 @@ namespace HanoiTowers
             {
                 if (canMoveArray[0] && canMoveArray[2])
                 {
-                    AddNewState(state, numDiscs - 2, 2);
+                    AddNewState(state, numDiscs - 2, 2, setPrev, setNew);
                 }
                 if (canMoveArray[0] && canMoveArray[3])
                 {
-                    AddNewState(state, numDiscs - 2, 3);
+                    AddNewState(state, numDiscs - 2, 3, setPrev, setNew);
                 }
                 canMoveArray[0] = false;
             }
@@ -68,7 +69,7 @@ namespace HanoiTowers
             {
                 if (canMoveArray[0] && canMoveArray[1])
                 {
-                    AddNewState(state, numDiscs - 2, 1);
+                    AddNewState(state, numDiscs - 2, 1, setPrev, setNew);
                 }
                 canMoveArray[0] = false;
             }
@@ -76,7 +77,7 @@ namespace HanoiTowers
             {
                 if (canMoveArray[var2] && canMoveArray[0])
                 {
-                    AddNewState(state, numDiscs - 2, 0);
+                    AddNewState(state, numDiscs - 2, 0, setPrev, setNew);
                 }
                 canMoveArray[var2] = false;
             }
@@ -85,7 +86,7 @@ namespace HanoiTowers
             {
                 if (canMoveArray[0] && canMoveArray[1])
                 {
-                    AddNewState(state, numDiscs - 1, 1);
+                    AddNewState(state, numDiscs - 1, 1, setPrev, setNew);    
                     //Console.WriteLine("The biggest is moved!\n");
                 }
             }
@@ -94,9 +95,9 @@ namespace HanoiTowers
     }
     public class K13_12MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K13_12MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K13_12MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
         { }
-        public void MoveDisks(byte[] state)
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             ResetArray(canMoveArray);
             for (int i = 0; i < numDiscs; i++)
@@ -111,7 +112,7 @@ namespace HanoiTowers
                         {
                             if (canMoveArray[j])
                             {
-                                AddNewState(state, i, j);
+                                AddNewState(state, i, j, setPrev, setNew);
                             }
                         }
                     }
@@ -119,7 +120,7 @@ namespace HanoiTowers
                     {
                         if (canMoveArray[0])
                         {
-                            AddNewState(state, i, 0);
+                            AddNewState(state, i, 0, setPrev, setNew);
                         }
                     }
                 }
@@ -129,10 +130,10 @@ namespace HanoiTowers
     }
     public class K13eMoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K13eMoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K13eMoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
         { }
 
-        public void MoveDisks(byte[] state)
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             bool[] innerCanMoveArray = new bool[numPegs];
             ResetArray(innerCanMoveArray);
@@ -174,11 +175,11 @@ namespace HanoiTowers
                             int innerCurrentState = StateToLong(innerNewState);
 
                             // Zaradi takih preverjanj potrebujemo hitro iskanje!
-                            if (!setPrev.Contains(innerCurrentState))
+                            if (!setPrev.Contains((uint)innerCurrentState))
                             {
                                 lock (setNew)
                                 {
-                                    setNew.Push(innerCurrentState);
+                                    setNew.Add((uint)innerCurrentState);
                                 }
                             }
                         }
@@ -192,10 +193,10 @@ namespace HanoiTowers
     }
     public class K4eMoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K4eMoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K4eMoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
         { }
 
-        public void MoveDisks(byte[] state)
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             ResetArray(canMoveArray);
 
@@ -235,11 +236,11 @@ namespace HanoiTowers
                             currentState = StateToLong(newState);
 
                             // Zaradi takih preverjanj potrebujemo hitro iskanje!
-                            if (!setPrev.Contains(currentState))
+                            if (!setPrev.Contains((uint)currentState))
                             {
                                 lock (setNew)
                                 {
-                                    setNew.Push(currentState);
+                                    setNew.Add((uint)currentState);
                                 }
                             }
                         }
@@ -253,10 +254,10 @@ namespace HanoiTowers
     }
     public class C4MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public C4MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public C4MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
         { }
 
-        public void MoveDisks(byte[] state)
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             ResetArray(canMoveArray);
 
@@ -292,11 +293,11 @@ namespace HanoiTowers
                             currentState = StateToLong(newState);
 
                             // Zaradi takih preverjanj potrebujemo hitro iskanje!
-                            if (!setPrev.Contains(currentState))
+                            if (!setPrev.Contains((uint)currentState))
                             {
                                 lock (setNew)
                                 {
-                                    setNew.Push(currentState);
+                                    setNew.Add((uint)currentState);
                                 }
                             }
                         }
@@ -310,9 +311,9 @@ namespace HanoiTowers
     }
     public class P4MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public P4MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public P4MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
         { }
-        public void MoveDisks(byte[] state)
+        public void MoveDisks(byte[] state, bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newStates, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             ResetArray(canMoveArray);
             byte[] newState = new byte[state.Length];
@@ -351,11 +352,11 @@ namespace HanoiTowers
                             newState[i] = j;
                             currentState = StateToLong(newState);
 
-                            if (!setPrev.Contains(currentState))
+                            if (!setPrev.Contains((uint)currentState))
                             {
                                 lock (setNew)
                                 {
-                                    setNew.Push(currentState);
+                                    setNew.Add((uint)currentState);
                                 }
                             }
                         }

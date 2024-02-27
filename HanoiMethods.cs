@@ -13,9 +13,9 @@ namespace HanoiTowers
         public readonly short numPegs;
         public readonly HanoiType type;
 
-        public Stack<int> setPrev;
-        public Stack<int> setCurrent;
-        public Stack<int> setNew;
+        public HashSet<uint> setPrev;
+        public HashSet<uint> setCurrent;
+        public HashSet<uint> setNew;
         public byte[] stateArray;
         public bool[] canMoveArray;
 
@@ -24,21 +24,25 @@ namespace HanoiTowers
         public int currentDistance;
         int finalState = 0;
 
-        public MoveStrategyBase(short numDisc, short numPegs, HanoiType typeHanoi)
+        public IMoveStrategy MoveStrategy { get; set; } // Make sure MoveStrategy is set before calling MakeAMove
+
+        private readonly object distanceLock = new object();
+
+        public MoveStrategyBase(short numDisc, short numPegs, HanoiType typeHanoi, IMoveStrategy MoveStrategy)
         {
             this.numDiscs = numDisc;
             this.numPegs = numPegs;
             this.type = typeHanoi;
             stateArray = new byte[numDiscs];
             canMoveArray = new bool[numPegs];
-
+            this.MoveStrategy = MoveStrategy;
             setPrev = new();
             setCurrent = new();
             setNew = new();
         }
 
 
-        public MoveStrategyBase(bool[] canMoveArray, short numDiscs, HanoiType typeHanoi, short numPegs, Stack<int> setPrev, byte[] newState, int currentState, Stack<int> setNew, Stack<int> setCurrent)
+        public MoveStrategyBase(bool[] canMoveArray, short numDiscs, HanoiType typeHanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent)
         {
             this.canMoveArray = canMoveArray;
             this.numDiscs = numDiscs;
@@ -133,63 +137,45 @@ namespace HanoiTowers
 
             currentDistance = 0;
             int initialState = StateToLong(stateArray);
-            setCurrent.Push(initialState);
+            setCurrent.Add((uint)initialState);
 
             path = "";
 
             int maxCardinality = 0;
             long maxMemory = 0;
             InitIgnoredStates(type);
-
+            Console.WriteLine("final state" + finalState);
+            int localCurrentDistance = 0;
             while (true) // Analiza posameznega koraka (i-tega premika)
             {
                 if (maxCardinality < setCurrent.Count)
-                    maxCardinality = (short)setCurrent.Count;
+                    maxCardinality = setCurrent.Count;
+
+                bool solutionFound = false;
+
+                var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
 
 
-                foreach (int num in setCurrent) // Znotraj i-tega premika preveri vsa možna stanja in se premakne v vse možne pozicije
+                Parallel.ForEach(setCurrent, parallelOptions, (num, loopState) =>
                 {
                     if (num == finalState)
                     {
-                        return currentDistance;
+                        solutionFound = true;
+                        loopState.Stop();
                     }
 
-                    byte[] tmpState = LongToState(num);
-                    switch (type)
+                    byte[] tmpState = LongToState((int)num);
+                    MoveStrategy.MoveDisks(tmpState, this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+
+
+                });
+
+
+                if (solutionFound)
+                {
+                    lock (distanceLock)
                     {
-                        case HanoiType.K13_01:
-                            K13_01MoveStrategy K13_01Move = new K13_01MoveStrategy(this.canMoveArray, this.numDiscs, this.numPegs, this.type, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
-                            K13_01Move.MoveDisks(tmpState);
-                            break;
-                        case HanoiType.K13_12:
-                            K13_12MoveStrategy K13_12Move = new K13_12MoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
-                            K13_12Move.MoveDisks(tmpState);
-                            break;
-                        case HanoiType.K13e_01:
-                        case HanoiType.K13e_12:
-                        case HanoiType.K13e_23:
-                        case HanoiType.K13e_30:
-                            K13eMoveStrategy K13eMove = new K13eMoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
-                            K13eMove.MoveDisks(tmpState);
-                            break;
-                        case HanoiType.K4e_01:
-                        case HanoiType.K4e_12:
-                        case HanoiType.K4e_23:
-                            K4eMoveStrategy K4eMove = new K4eMoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
-                            K4eMove.MoveDisks(tmpState);
-                            break;
-                        case HanoiType.C4_01:
-                        case HanoiType.C4_12:
-                            C4MoveStrategy c4Move = new C4MoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
-                            c4Move.MoveDisks(tmpState);
-                            break;
-                        case HanoiType.P4_01:
-                        case HanoiType.P4_12:
-                        case HanoiType.P4_23:
-                        case HanoiType.P4_31:
-                            P4MoveStrategy p4Move = new P4MoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
-                            p4Move.MoveDisks(tmpState);
-                            break;
+                        return currentDistance;
                     }
                 }
 
@@ -206,6 +192,7 @@ namespace HanoiTowers
                 setNew = new();
 
                 currentDistance++;
+                
 
                 Console.WriteLine("Current distance: " + currentDistance + "     Maximum cardinality: " + maxCardinality);
                 Console.WriteLine("Memory allocation: " + mem / 1000000 + "MB  \t\t Maximum memory: " + maxMemory / 1000000 + "MB");
@@ -247,7 +234,7 @@ namespace HanoiTowers
             }
         }
 
-        public void AddNewState(byte[] state, int disc, byte toPeg)
+        public void AddNewState(byte[] state, int disc, byte toPeg, HashSet<uint> setPrev,HashSet<uint> setNew)
         {
             byte[] newState = new byte[state.Length];
             Array.Copy(state, newState, state.Length);
@@ -255,9 +242,12 @@ namespace HanoiTowers
 
             currentState = StateToLong(newState);
 
-            if (!setPrev.Contains(currentState))
+            if (!setPrev.Contains((uint)currentState))
             {
-                setNew.Push(currentState);
+                lock (setNew)
+                {
+                setNew.Add((uint)currentState);
+                }
             }
         }
 
