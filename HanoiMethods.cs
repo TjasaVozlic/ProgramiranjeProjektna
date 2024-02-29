@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,6 +58,10 @@ namespace HanoiTowers
         }
         public int ShortestPathForSmallDimension(out string path)
         {
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             if (!Enum.IsDefined(typeof(HanoiType), type))
                 throw new NotImplementedException("The search for this type is not implemented yet.");
             // For each disc we have its peg
@@ -180,6 +185,7 @@ namespace HanoiTowers
 
                 if(solutionFound)
                 {
+                    stopwatch.Stop();
                     return currentDistance;
                 }
 
@@ -204,7 +210,8 @@ namespace HanoiTowers
              
                 Console.WriteLine("Current distance: " + currentDistance + "     Maximum cardinality: " + maxCardinality);
                 Console.WriteLine("Memory allocation: " + mem / 1000000 + "MB  \t\t Maximum memory: " + maxMemory / 1000000 + "MB");
-                Console.CursorTop -= 2;
+                Console.WriteLine($"Execution Time: {stopwatch.Elapsed.TotalSeconds:F2} seconds");
+                Console.CursorTop -= 3;
             }
         }
 

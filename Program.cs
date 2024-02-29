@@ -20,21 +20,17 @@ namespace HanoiTowers
             //Hanoi hanoi = HanoiFactory.GetHanoi(numDiscs, numPegs, selectedType);
             Hanoi hanoi = HanoiFactory.GetHanoi(numDiscs, numPegs, selectedType);
 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
 
             // Perform calculations
             string path;
             //int shortestPath = hanoi.Move(out path);
             int shortestPath = hanoi.MakeMoveForSmallDimension(out path);
 
-            stopwatch.Stop();
 
             // Output results
 
             
             Console.WriteLine();
-            Console.WriteLine($"Execution Time: {stopwatch.Elapsed.TotalSeconds:F2} seconds");
             Console.WriteLine($"Shortest Path: {shortestPath}");
             Console.ReadLine(); // Keep console open to view the output
 
