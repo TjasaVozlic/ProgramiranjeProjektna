@@ -79,7 +79,6 @@ namespace HanoiTowers
                 case HanoiType.K13_01:
                     stateArray = ArrayAllEqual(0);
                     finalState = FinalState();
-                    Console.WriteLine("Final state" + finalState);
                     break;
                 case HanoiType.K13_12:
                     stateArray = ArrayAllEqual(2);
@@ -151,7 +150,6 @@ namespace HanoiTowers
             int maxCardinality = 0;
             long maxMemory = 0;
             InitIgnoredStates(type);
-            Console.WriteLine("final state" + finalState);
             while (true) // Analiza posameznega koraka (i-tega premika)
             {
                 if (maxCardinality < setCurrent.Count)
@@ -313,7 +311,6 @@ namespace HanoiTowers
                 num += factor;
                 factor *= numPegs;
             }
-            Console.WriteLine("Final state: " + num);
             return num;
         }
 
