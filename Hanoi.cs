@@ -37,16 +37,7 @@ namespace HanoiTowers
         public readonly short numDiscs;
         public readonly short numPegs;
         public HanoiType type;
-        public HashSet<uint> setPrev;
-        public HashSet<uint> setCurrent;
-        public HashSet<uint> setNew;
-        public byte[] stateArray;
-        public bool[] canMoveArray;
-
-        public byte[] newState;
-        public int currentState;
-        public uint currentDistance;
-        int finalState = 0;
+  
         public IMoveStrategy MoveStrategy { get; set; } // Make sure MoveStrategy is set before calling MakeAMove
 
 
@@ -85,7 +76,7 @@ namespace HanoiTowers
         {
 
             type = HanoiType.K13_01;
-            MoveStrategy = new K13_01MoveStrategy(this.canMoveArray, this.numDiscs, this.numPegs, this.type,  this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+            MoveStrategy = new K13_01MoveStrategy(this.numDiscs, this.type, this.numPegs);
         }
     }
 
@@ -94,7 +85,7 @@ namespace HanoiTowers
         public K13_12(short numDiscs, short numPegs) : base(numDiscs, numPegs)
         {
             type = HanoiType.K13_12;
-            MoveStrategy = new K13_12MoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+            MoveStrategy = new K13_12MoveStrategy(this.numDiscs, this.type, this.numPegs);
         }
     }
 
@@ -103,7 +94,7 @@ namespace HanoiTowers
         public K13e(short numDiscs, short numPegs, HanoiType hanoiType) : base(numDiscs, numPegs)
         {
             type = hanoiType;
-            MoveStrategy = new K13eMoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+            MoveStrategy = new K13eMoveStrategy(this.numDiscs, this.type, this.numPegs);
         }
     }
 
@@ -112,7 +103,7 @@ namespace HanoiTowers
         public K4e(short numDiscs, short numPegs, HanoiType hanoiType) : base(numDiscs, numPegs)
         {
             type = hanoiType;
-            MoveStrategy = new K4eMoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+            MoveStrategy = new K4eMoveStrategy(this.numDiscs, this.type, this.numPegs);
         }
     }
     public class C4 : Hanoi
@@ -120,7 +111,7 @@ namespace HanoiTowers
         public C4(short numDiscs, short numPegs, HanoiType hanoiType) : base(numDiscs, numPegs)
         {
             type = hanoiType;
-            MoveStrategy = new C4MoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+            MoveStrategy = new C4MoveStrategy(this.numDiscs, this.type, this.numPegs);
         }
     }
     public class P4 : Hanoi
@@ -128,7 +119,7 @@ namespace HanoiTowers
         public P4(short numDiscs, short numPegs, HanoiType hanoiType) : base(numDiscs, numPegs)
         {
             type = hanoiType;
-            MoveStrategy = new P4MoveStrategy(this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+            MoveStrategy = new P4MoveStrategy(this.numDiscs, this.type, this.numPegs);
         }
     }
 

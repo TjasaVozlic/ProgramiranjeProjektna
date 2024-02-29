@@ -27,8 +27,17 @@ namespace HanoiTowers
         int finalState = 0;
 
         public IMoveStrategy MoveStrategy { get; set; } // Make sure MoveStrategy is set before calling MakeAMove
-
-        private readonly object distanceLock = new object();
+        public MoveStrategyBase(short numDisc, short numPegs, HanoiType typeHanoi)
+        {
+            this.numDiscs = numDisc;
+            this.numPegs = numPegs;
+            this.type = typeHanoi;
+            stateArray = new byte[numDiscs];
+            canMoveArray = new bool[numPegs];
+            setPrev = new();
+            setCurrent = new();
+            setNew = new();
+        }
 
         public MoveStrategyBase(short numDisc, short numPegs, HanoiType typeHanoi, IMoveStrategy MoveStrategy)
         {

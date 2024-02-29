@@ -15,7 +15,7 @@ namespace HanoiTowers
 
     public class K13_01MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K13_01MoveStrategy(bool[] canMoveArray, short numDiscs, short numPegs, HanoiType hanoi, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K13_01MoveStrategy(short numDiscs, HanoiType hanoi, short numPegs) : base(numDiscs, numPegs, hanoi)
         { }
 
         public void MoveDisks(byte[] state, HashSet<uint> setPrev, HashSet<uint> setNew)
@@ -98,7 +98,7 @@ namespace HanoiTowers
     }
         public class K13_12MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K13_12MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K13_12MoveStrategy(short numDiscs, HanoiType hanoi, short numPegs) : base(numDiscs, numPegs, hanoi)
         { }
         public void MoveDisks(byte[] state, HashSet<uint> setPrev, HashSet<uint> setNew)
         {
@@ -135,7 +135,7 @@ namespace HanoiTowers
     }
     public class K13eMoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K13eMoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K13eMoveStrategy(short numDiscs, HanoiType hanoi, short numPegs) : base(numDiscs, numPegs, hanoi)
         { }
 
         public void MoveDisks(byte[] state, HashSet<uint> setPrev, HashSet<uint> setNew)
@@ -180,7 +180,7 @@ namespace HanoiTowers
     }
     public class K4eMoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public K4eMoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public K4eMoveStrategy(short numDiscs, HanoiType hanoi, short numPegs) : base(numDiscs, numPegs, hanoi)
         { }
 
         public void MoveDisks(byte[] state, HashSet<uint> setPrev, HashSet<uint> setNew)
@@ -225,7 +225,7 @@ namespace HanoiTowers
     }
     public class C4MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public C4MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public C4MoveStrategy(short numDiscs, HanoiType hanoi, short numPegs) : base(numDiscs, numPegs, hanoi)
         { }
 
         public void MoveDisks(byte[] state, HashSet<uint> setPrev, HashSet<uint> setNew)
@@ -264,7 +264,7 @@ namespace HanoiTowers
     }
     public class P4MoveStrategy : MoveStrategyBase, IMoveStrategy
     {
-        public P4MoveStrategy(bool[] canMoveArray, short numDiscs, HanoiType hanoi, short numPegs, HashSet<uint> setPrev, byte[] newState, int currentState, HashSet<uint> setNew, HashSet<uint> setCurrent) : base(canMoveArray, numDiscs, hanoi, numPegs, setPrev, newState, currentState, setNew, setCurrent)
+        public P4MoveStrategy(short numDiscs, HanoiType hanoi, short numPegs) : base(numDiscs, numPegs, hanoi)
         { }
         public void MoveDisks(byte[] state,HashSet<uint> setPrev, HashSet<uint> setNew)
         {
