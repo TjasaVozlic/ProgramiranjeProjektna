@@ -54,7 +54,6 @@ namespace HanoiTowers
         {
             this.numDiscs = numDiscs;
             this.numPegs = numPegs;
-
         }
 
         public static HanoiType SelectHanoiType()

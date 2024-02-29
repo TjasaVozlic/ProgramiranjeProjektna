@@ -1,6 +1,7 @@
 ﻿using HanoiTowers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,6 +74,7 @@ namespace HanoiTowers
                 case HanoiType.K13_01:
                     stateArray = ArrayAllEqual(0);
                     finalState = FinalState();
+                    Console.WriteLine("Final state" + finalState);
                     break;
                 case HanoiType.K13_12:
                     stateArray = ArrayAllEqual(2);
@@ -145,7 +147,6 @@ namespace HanoiTowers
             long maxMemory = 0;
             InitIgnoredStates(type);
             Console.WriteLine("final state" + finalState);
-            int localCurrentDistance = 0;
             while (true) // Analiza posameznega koraka (i-tega premika)
             {
                 if (maxCardinality < setCurrent.Count)
@@ -154,30 +155,36 @@ namespace HanoiTowers
                 bool solutionFound = false;
 
                 var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
-
-
                 Parallel.ForEach(setCurrent, parallelOptions, (num, loopState) =>
                 {
+                    //Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} processing number {num}");
+                 
+                    int localCurrentState = 0;
                     if (num == finalState)
                     {
+                        //Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} found final state: {num}");
                         solutionFound = true;
                         loopState.Stop();
                     }
 
                     byte[] tmpState = LongToState((int)num);
-                    MoveStrategy.MoveDisks(tmpState, this.canMoveArray, this.numDiscs, this.type, this.numPegs, this.setPrev, this.newState, this.currentState, this.setNew, this.setCurrent);
+                    MoveStrategy.MoveDisks(tmpState, setPrev, setNew);
+                    //Console.WriteLine("setPrev " + string.Join(", ", setPrev));
+                    //Console.WriteLine("setNew " + string.Join(", ", setNew));
+
+                 
 
 
+                    //Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} finished processing number {num}");
                 });
 
-
-                if (solutionFound)
+                if(solutionFound)
                 {
-                    lock (distanceLock)
-                    {
-                        return currentDistance;
-                    }
+                    return currentDistance;
                 }
+
+                //Console.WriteLine("\n");
+                //Console.WriteLine("\n");
 
                 long mem = GC.GetTotalMemory(false);
                 if (maxMemory < mem)
@@ -194,6 +201,7 @@ namespace HanoiTowers
                 currentDistance++;
                 
 
+             
                 Console.WriteLine("Current distance: " + currentDistance + "     Maximum cardinality: " + maxCardinality);
                 Console.WriteLine("Memory allocation: " + mem / 1000000 + "MB  \t\t Maximum memory: " + maxMemory / 1000000 + "MB");
                 Console.CursorTop -= 2;
@@ -234,21 +242,47 @@ namespace HanoiTowers
             }
         }
 
-        public void AddNewState(byte[] state, int disc, byte toPeg, HashSet<uint> setPrev,HashSet<uint> setNew)
+        public void AddNewState(byte[] state, int disc, byte toPeg, HashSet<uint> setPrev, HashSet<uint> setNew)
         {
             byte[] newState = new byte[state.Length];
-            Array.Copy(state, newState, state.Length);
+            Array.Copy(state, newState, state.Length);        
             newState[disc] = toPeg;
 
-            currentState = StateToLong(newState);
+            int localCurrentState = StateToLong(newState);
 
-            if (!setPrev.Contains((uint)currentState))
+            if (!setPrev.Contains((uint)localCurrentState))
             {
                 lock (setNew)
                 {
-                setNew.Add((uint)currentState);
+                    setNew.Add((uint)localCurrentState);
+                }
+
+            }
+         
+        }
+        public void AddNewPossibleStates(byte[] state, byte[] posibleMoves, bool[] canMoveArray, int i, HashSet<uint> setPrev, HashSet<uint> setNew)
+        {
+            byte[] newState = new byte[state.Length];
+            int currentState;
+            foreach (byte j in posibleMoves)
+            {
+                if (canMoveArray[j])
+                {
+                    Array.Copy(state, newState, state.Length);
+                    newState[i] = j;
+                    currentState = StateToLong(newState);
+
+                    if (!setPrev.Contains((uint)currentState))
+                    {
+                        lock (setNew)
+                        {
+                            setNew.Add((uint)currentState);
+                        }
+                    }
+
                 }
             }
+
         }
 
         public int StateToLong(byte[] state)

@@ -34,7 +34,7 @@ namespace HanoiTowers
 
             
             Console.WriteLine();
-            Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} milliseconds");
+            Console.WriteLine($"Execution Time: {stopwatch.Elapsed.TotalSeconds:F2} seconds");
             Console.WriteLine($"Shortest Path: {shortestPath}");
             Console.ReadLine(); // Keep console open to view the output
 
